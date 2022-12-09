@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
+
+      - name: Install
+        run: yarn install --prefer-offline
+      - name: Linter
+        run: yarn lint
+      - name: Tests
+        run: yarn test:ci

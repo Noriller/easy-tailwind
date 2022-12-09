@@ -1,0 +1,90 @@
+{
+  "name": "easy-tailwind",
+  "private": false,
+  "version": "0.0.0",
+  "description": "An easier way of writing Tailwind classes.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint --ignore-path .gitignore --fix .",
+    "test": "jest --watch --verbose",
+    "test:ci": "jest --verbose",
+    "test:cov": "jest --coverage --silent --watchAll",
+    "prepare": "husky install",
+    "cleanDist": "npx rimraf dist/*",
+    "build": "tsc",
+    "prebuild:prod": "$npm_execpath run cleanDist",
+    "build:prod": "tsc -p ./tsconfig.build.json && tsc -p ./tsconfig.nocomments.json",
+    "prepackPublish": "$npm_execpath run build:prod",
+    "packPublish": "node buildPack.js",
+    "packPublish:dryRun": "$npm_execpath run packPublish && npm publish ./out/*.tgz --dry-run",
+    "packPublish:publish": "$npm_execpath run packPublish && $npm_execpath publish ./out/*.tgz",
+    "benchmark:run": "for file in performance/tests/*; do node \"$file\"; done",
+    "benchmark": "$npm_execpath run build:prod && $npm_execpath run benchmark:run"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
+    "@types/jest": "^26.0.22",
+    "@types/node": "^16.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "copyfiles": "^2.4.1",
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "husky": "^7.0.0",
+    "jest": "^27.0.6",
+    "lint-staged": "^11.0.0",
+    "prettier": "^2.2.1",
+    "ts-jest": "^27.0.3",
+    "ts-loader": "^9.2.3",
+    "ts-node": "^10.0.0",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.2.3"
+  },
+  "author": "Bruno Noriller <brunonoriller@gmail.com> (https://github.com/Noriller)",
+  "bugs": {
+    "url": "https://github.com/Noriller/easy-tailwind/issues"
+  },
+  "homepage": "https://github.com/Noriller/easy-tailwind",
+  "keywords": [
+    "tailwind",
+    "chakra",
+    "class",
+    "classnames"
+  ],
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.ts"
+    ],
+    "coverageDirectory": "../coverage",
+    "coverageThreshold": {
+      "global": {
+        "statements": 100,
+        "branches": 100,
+        "functions": 100,
+        "lines": 100
+      }
+    },
+    "testEnvironment": "node"
+  },
+  "lint-staged": {
+    "*.{js,ts}": "yarn lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Noriller/easy-tailwind.git"
+  }
+}
