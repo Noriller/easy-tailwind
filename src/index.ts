@@ -1,10 +1,11 @@
-export type EasyType =
-  | {
-    [key: string]: string | string[] | EasyType;
-  }
-  | string
-  | string[]
-  | EasyType;
+// type EasyTypes = string | string[] | EasyTypeObj;
+
+// type EasyTypeObj = {
+//   [key: string]: EasyTypes | EasyType;
+// };
+// export type EasyType = EasyTypes;
+
+export type EasyType = unknown;
 
 function easyTW(...args: EasyType[]) {
   return twReducer(args).join(' ');
