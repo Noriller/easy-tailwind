@@ -2,6 +2,13 @@
 
 An easier way of writing Tailwind classes.
 
+Still in beta, wait for actual release.
+
+## Rules
+
+- Use boolean values for conditional expressions (ternary, &&, ||, ??, etc...)
+- Don't add variables other than the boolean for the conditional expressions
+
 ## Work with me
 
 <https://www.linkedin.com/in/noriller/>
