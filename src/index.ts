@@ -22,7 +22,7 @@ export const e: (...args: EasyType[]) => string = new Proxy(easyTW, {
 function twReducer(args: EasyType[]) {
   return (
     args.reduce((acc: string[], cur) => {
-      if (cur === undefined || cur === null) return acc;
+      if (cur === undefined || cur === null || cur === false) return acc;
 
       if (Array.isArray(cur)) {
         acc.push(...cur.filter(Boolean));
