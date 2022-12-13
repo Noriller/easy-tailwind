@@ -44,3 +44,5 @@ function twReducer(args: EasyType[]) {
     }, []) as string[]
   ).flat(Infinity);
 }
+
+export const etw = e;
