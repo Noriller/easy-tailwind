@@ -119,9 +119,12 @@ describe('EasyTW', () => {
     );
   });
 
-  it.each([false, undefined, null])('handles falsy values', (falsy) => {
-    expect(e(falsy && 'anything')).toBe('');
-  });
+  it.each([false && 'anything', undefined && 'anything', null && 'anything'])(
+    'handles falsy values',
+    (falsy) => {
+      expect(e(falsy)).toBe('');
+    },
+  );
 
   it('accepts alternatives syntax', () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -138,6 +141,12 @@ describe('EasyTW', () => {
       'special-mod:more',
       'special-mod:classes',
     ]);
+  });
+
+  it('handles an edge case of empty string', () => {
+    // this should not happen, but when a "prop" of the
+    // proxy handle is falsy, it defaults to the unproxied object
+    expect(e['']('anything')).toEqual('anything');
   });
 
   describe('examples from TW docs', () => {
