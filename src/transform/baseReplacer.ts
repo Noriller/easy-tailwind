@@ -9,7 +9,8 @@ const replaceAndOr = /((!*?\w+) (&&|\|\||\?\?) )/gis;
 /**
  * This matches the ternary style operator and returns as the 2 groups the true and false matches.
  */
-const replaceTernary = /(?:!*?\w+)\s*\?\s*(.+?)\s*:\s*((?<q>['"]).*?\k<q>)/gis;
+const replaceTernary =
+  /(?:!*?\w+)\s*\?\s*(?<q1>['"])(?<m1>.*?)\k<q1>\s*:\s*(?<q2>['"])(?<m2>.*?)\k<q2>/gis;
 
 export const baseReplacer = (easyTailwindRegex: RegExp) => {
   return (content: string) => {
@@ -17,7 +18,7 @@ export const baseReplacer = (easyTailwindRegex: RegExp) => {
       return content.replace(easyTailwindRegex, (match, $1) => {
         const currentTransform = $1
           .replace(replaceAndOr, '')
-          .replace(replaceTernary, '$1, $2')
+          .replace(replaceTernary, '"$<m1> $<m2>"')
           .trim();
 
         try {
