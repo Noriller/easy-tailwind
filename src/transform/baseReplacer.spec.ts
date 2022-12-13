@@ -1,5 +1,5 @@
 import { expect, jest, it, describe } from '@jest/globals';
-import { baseReplacer } from './baseReplacer';
+import { baseReplacer } from '.';
 
 describe('.baseReplacer()', () => {
   const catchAllRegex = /(.*)/gis;
