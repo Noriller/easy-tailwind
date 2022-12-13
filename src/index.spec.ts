@@ -1,6 +1,10 @@
-import { e } from './';
+import { e, etw } from './';
 
 describe('EasyTW', () => {
+  it('exports both "e" and "etw" as options', () => {
+    expect(e).toBe(etw);
+  });
+
   it.each([
     { args: [], expected: '' },
     { args: [null], expected: '' },
@@ -113,6 +117,10 @@ describe('EasyTW', () => {
     ).toBe(
       'Lorem ipsum dolor sit amet consectetur adipiscing elit Sed sit amet ligula ex Ut mod1:in mod1:suscipit mod1:metus mod2:vel mod2:accumsan mod2:orci mod2:Vivamus mod2:sapien mod2:neque mod2:dictum mod2:vel mod2:felis mod2:maximus mod3:luctus mod3:mod4:lorem mod5:Fusce mod5:malesuada mod5:massa mod5:eu mod5:turpis mod5:finibus mod5:mod6:mollis mod5:mod6:mod7:In mod5:mod6:mod7:augue mod5:mod6:mod7:tortor mod5:mod6:mod7:mod8:porta mod5:mod6:mod7:mod8:eu mod5:mod6:mod7:mod8:erat mod5:mod6:mod7:mod8:sit mod5:mod6:mod7:mod8:amet mod5:mod6:mod7:mod8:tristique mod5:mod6:mod7:mod8:ullamcorper mod5:mod6:mod7:mod8:arcu',
     );
+  });
+
+  it.each([false, undefined, null])('handles falsy values', (falsy) => {
+    expect(e(falsy && 'anything')).toBe('');
   });
 
   it('accepts alternatives syntax', () => {
