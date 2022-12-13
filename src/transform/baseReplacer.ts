@@ -28,7 +28,7 @@ export const baseReplacer = (easyTailwindRegex: RegExp) => {
           console.error(
             `\nAre you following EasyTailwind rules?\n\n${errorParsing.message} in\n${match}\n\nTrying to be transformed into:\n${currentTransform}\n`,
           );
-          return content;
+          return match;
         }
       });
     } catch (errorOnFile) {
