@@ -8,6 +8,10 @@ describe('react| .replacer()', () => {
     globalThis.console.error.name,
   );
 
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
   it('handles a file without matches', () => {
     const fixtureWithoutMatch = `
       export function MyComponent() {
@@ -117,5 +121,34 @@ Trying to be transformed into:
 Math.random() > 0.\"using with e but with error\"
 `,
     );
+  });
+
+  it('handles example from playground', () => {
+    // this one fails depending on the ordering
+
+    const fixtureWithMatches = `
+    export function MyComponentWithWeirdThings() {
+      return (
+        <div
+          className={e(
+            'bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]',
+            'bg-[url(https://play.tailwindcss.com/img/grid.svg)]',
+            'absolute inset-0',
+          )}
+        ></div>
+      )
+    }
+  `;
+    expect(replacer(fixtureWithMatches)).toMatchInlineSnapshot(`
+      "
+          export function MyComponentWithWeirdThings() {
+            return (
+              <div
+                className={e(\\"bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] bg-[url(https://play.tailwindcss.com/img/grid.svg)] absolute inset-0\\")}
+              ></div>
+            )
+          }
+        "
+    `);
   });
 });
