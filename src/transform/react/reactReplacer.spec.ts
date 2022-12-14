@@ -35,8 +35,8 @@ describe('react| .replacer()', () => {
             export function MyComponentWithMatches() {
               return (
                 <div className=\\"not using here\\">
-                  <div using with e>anything1</div>
-                  <div using with etw>anything2</div>
+                  <div className={e(\\"using with e\\")}>anything1</div>
+                  <div className={etw(\\"using with etw\\")}>anything2</div>
                 </div>
               );
             }
@@ -76,7 +76,9 @@ describe('react| .replacer()', () => {
               const random = Math.random() > 0.5;
               return (
                 <div className=\\"not using here\\">
-                  <div using with e in a complex manner mod1:value mod1:other mod2:sub1:random another:true another:false another2:something>anything1</div>
+                  <div className={
+                    e(\\"using with e in a complex manner mod1:value mod1:other mod2:sub1:random another:true another:false another2:something\\")
+                  }>anything1</div>
                 </div>
               )
             }

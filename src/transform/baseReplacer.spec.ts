@@ -2,7 +2,7 @@ import { expect, jest, it, describe } from '@jest/globals';
 import { baseReplacer } from '.';
 
 describe('.baseReplacer()', () => {
-  const catchAllRegex = /(.*)/gis;
+  const catchAllRegex = /e\((.*)\)/gis;
   const replacer = baseReplacer(catchAllRegex);
 
   const consoleErrorSpy = jest.spyOn(
@@ -20,8 +20,8 @@ describe('.baseReplacer()', () => {
     expect(replacer('')).toBe('');
   });
 
-  it('return the just the content when ', () => {
-    expect(replacer('content')).toEqual('content');
+  it('return the just the content when no matches are found', () => {
+    expect(replacer(`e("content")`)).toEqual('e("content")');
   });
 
   it.each([
@@ -29,7 +29,7 @@ describe('.baseReplacer()', () => {
     `!boolean ? "my" : "classes"`,
     `!!boolean ? "my" : "classes"`,
   ])('replaces a ternary: %s', (content) => {
-    expect(replacer(content)).toEqual('my classes');
+    expect(replacer(`e(${content})`)).toEqual('e("my classes")');
   });
 
   it.each([
@@ -43,7 +43,7 @@ describe('.baseReplacer()', () => {
     `!!boolean || "my classes"`,
     `!!boolean ?? "my classes"`,
   ])('replaces conditionals: %s', (content) => {
-    expect(replacer(content)).toEqual('my classes');
+    expect(replacer(`e(${content})`)).toEqual('e("my classes")');
   });
 
   it.each([
@@ -52,10 +52,10 @@ describe('.baseReplacer()', () => {
     `(my > boolean) || "something else"`,
     `(my > boolean) ?? "something else"`,
   ])('throws when content dont follow etw rules: %s', (content) => {
-    expect(replacer(content)).toEqual(content);
+    expect(replacer(`e(${content})`)).toEqual(`e(${content})`);
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      `\nAre you following EasyTailwind rules?\n\nmy is not defined in\n${content}\n\nTrying to be transformed into:\n${content}\n`,
+      `\nAre you following EasyTailwind rules?\n\nmy is not defined in\ne(${content})\n\nTrying to be transformed into:\n${content}\n`,
     );
   });
 

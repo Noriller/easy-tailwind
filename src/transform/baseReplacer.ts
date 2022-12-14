@@ -24,7 +24,7 @@ export const baseReplacer = (easyTailwindRegex: RegExp) => {
         try {
           const parsedArgs = new Function(`return [${currentTransform}]`)();
           const parsedClasses = e(...parsedArgs);
-          return parsedClasses;
+          return match.replace($1, `"${parsedClasses}"`);
         } catch (errorParsing) {
           console.error(
             `\nAre you following EasyTailwind rules?\n\n${errorParsing.message} in\n${match}\n\nTrying to be transformed into:\n${currentTransform}\n`,
