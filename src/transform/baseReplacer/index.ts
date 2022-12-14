@@ -27,7 +27,8 @@ const replaceTernary =
       // ...
       transform: {
         // ...,
-        'my-file-type': baseReplacer(/my regex/)
+        'my-file-type': baseReplacer(/my regex/),
+        DEFAULT: baseReplacer(/my regex/), // default is a catch all
       }
     },
     // ...
