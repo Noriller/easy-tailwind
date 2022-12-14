@@ -47,6 +47,25 @@ describe('.baseReplacer()', () => {
   });
 
   it.each([
+    { content: `boolean && ["my", "classes"]`, result: 'e("my classes")' },
+    {
+      content: `boolean && {
+        mod:"my classes"
+      }`,
+      result: 'e("mod:my mod:classes")',
+    },
+    {
+      content: `{ my: boolean && [ { mod:"classes" } ] }`,
+      result: 'e("my:mod:classes")',
+    },
+  ])(
+    'replaces conditionals with objects: $content | return $result',
+    ({ content, result }) => {
+      expect(replacer(`e(${content})`)).toEqual(result);
+    },
+  );
+
+  it.each([
     `(my > boolean) ? "something" : "else"`,
     `(my > boolean) && "something else"`,
     `(my > boolean) || "something else"`,
