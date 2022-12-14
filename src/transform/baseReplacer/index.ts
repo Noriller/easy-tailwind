@@ -1,4 +1,4 @@
-import { e } from '..';
+import { e } from '../..';
 
 /**
  * This matches the &&, ||, ?? operators that are used for conditional classes.
