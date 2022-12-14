@@ -12,6 +12,28 @@ const replaceAndOr = /((!*?\w+) (&&|\|\||\?\?) )/gis;
 const replaceTernary =
   /(?:!*?\w+)\s*\?\s*(?<q1>['"])(?<m1>.*?)\k<q1>\s*:\s*(?<q2>['"])(?<m2>.*?)\k<q2>/gis;
 
+/**
+ * If any of the available transforms arent suited for your needs,
+ * then you can use this baseReplacer function to create a replacer
+ * that will work for you.
+ *
+ * This accepts a RegExp where the first group is the args to be passed to `e`/`etw` function (`EasyTailwind` main function).
+ *
+ * Then in `tailwind.config.cjs`
+ *
+ *```js
+  module.exports = {
+    content: {
+      // ...
+      transform: {
+        // ...,
+        'my-file-type': baseReplacer(/my regex/)
+      }
+    },
+    // ...
+  }
+ * ```
+ */
 export const baseReplacer = (easyTailwindRegex: RegExp) => {
   return (content: string) => {
     try {
