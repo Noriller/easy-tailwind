@@ -6,3 +6,10 @@ import { baseReplacer } from '../baseReplacer';
 const findClasses = /class(?:name)?={\W*?(?:e|etw)\((.*?)\)\W*?}/gis;
 
 export const replacer = baseReplacer(findClasses);
+
+export const content = {
+  files: ['!node_modules', './**/*.{js,ts,jsx,tsx,html}'],
+  transform: {
+    DEFAULT: replacer,
+  },
+};
