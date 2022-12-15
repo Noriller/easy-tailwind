@@ -8,7 +8,106 @@ Still in beta, wait for actual release.
 
 ## Installation
 
-### Setup
+Install with your preferred manager:
+
+```bash
+npm i easy-tailwind
+```
+
+```bash
+yarn add easy-tailwind
+```
+
+```bash
+pnpm add easy-tailwind
+```
+
+## Setup
+
+The configuration file is something like `tailwind.config.cjs`, and the basic configuration you need is:
+
+```js
+// tailwind.config.cjs
+const { content } = require('easy-tailwind/transform');
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content,
+  // ...
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+If you need to override something in the config:
+
+```js
+// tailwind.config.cjs
+const { replacer, baseReplacer } = require('easy-tailwind/transform');
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: {
+    files: [
+      '!node_modules',
+      './**/*.{js,ts,jsx,tsx,html,vue,svelte,astro}' // here you can specify your own files and directories
+    ],
+    transform: {
+      DEFAULT: replacer, // default is applied to all files types
+            // baseReplacer accepts a RegExp can work for your needs
+      html: baseReplacer(/my regex for html/) // you can override for one file type
+    },
+  }
+  // ...
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+### Especific configuration for frameworks
+
+Right now, the only especific one is `React`, instead of importing from `easy-tailwind/transform`, import from `easy-tailwind/transform/react`
+
+While `baseReplacer` is exported only from the root of `easy-tailwind/transform`, for each framework supported `content` and `replacer` will be exported.
+
+In the example for `React`:
+
+```js
+// tailwind.config.cjs
+const { content } = require('easy-tailwind/transform/react');
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content,
+  // ...
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+Where `content` is equivalent to:
+
+```js
+// tailwind.config.cjs
+const { replacer } = require('easy-tailwind/transform/react');
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: {
+    files: ['!node_modules', './**/*.{js,ts,jsx,tsx,html}'],
+    transform: {
+      DEFAULT: replacer,
+    },
+  }
+  // ...
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
 
 ## How to use
 
@@ -38,6 +137,8 @@ However, the more complicated and inclusive you want it to scan for, the more yo
 
 The best balance to be able to accept having conditional classes while minimizing impact on performance is to simplify this, looking for only a boolean variable and not something that can be as simple as a variable or as complex as complex can be.
 
+See more at [Tailwind "Tranfsforming source files"](https://tailwindcss.com/docs/content-configuration#transforming-source-files).
+
 ## Does it Support XYZ?
 
 If you're asking... I'll say probably, but probably not in the best way right now.
@@ -49,6 +150,19 @@ We export the generic functions you can use, but to have a better performance yo
 Feel free to open a PR if you get it working. =D
 
 If you need help with that, send me examples of how you can use EasyTailwind (a sandbox example would be best) in XYZ files and I'm sure we can work it out.
+
+See more at [Tailwind "Tranfsforming source files"](https://tailwindcss.com/docs/content-configuration#transforming-source-files).
+
+## Final Considerations
+
+This is mostly 'pure' functions, so we don't need to worry about getting "stale".
+
+More functionalities are welcome, but ultimately this package can have months between any updates.
+This doesn't mean that it's "dead", just that it's doing what it needs.
+
+Today it works with Tailwind v3, I'm not sure if with lower versions or for higher versions.
+As long as the `content` part doesn't change, then you can just import and use it.
+If it changes, you have the `replacer` for the transformations (as long as it supports it), but expect updates as soon as possible.
 
 ## Work with me
 
