@@ -2,12 +2,53 @@
 
 An easier way of writing Tailwind classes.
 
+[Example to play around](https://stackblitz.com/edit/easy-tailwind?file=src/App.jsx)
+
 Still in beta, wait for actual release.
 
-## Rules
+## Installation
+
+### Setup
+
+## How to use
+
+### Break lines
+
+### Use Objects
+
+### Conditional classes
+
+### Known limitations
+
+## Rules for it to work
 
 - Use boolean values for conditional expressions (ternary, &&, ||, ??, etc...)
 - Don't add variables other than the boolean for the conditional expressions
+
+### Why is this necessary?
+
+Tailwind works with the JIT compiler that can create new classes on the class and inject them.
+
+For it to work, they need to scan all the files looking for the classes, but when you use `EasyTailwind`,
+you're basically compressing many of the classes you're trying to use. So we need to add an extra step to Tailwind.
+
+In the Tailwind config (`tailwind.config.cjs`) you add the files it will scan for tailwind classes and a transform that uses a function that will resolve ahead of time what EasyTailwind can produce, so Tailwind can inject ahead of time all possible classes.
+
+However, the more complicated and inclusive you want it to scan for, the more you loose performance (for running in dev mode and for build).
+
+The best balance to be able to accept having conditional classes while minimizing impact on performance is to simplify this, looking for only a boolean variable and not something that can be as simple as a variable or as complex as complex can be.
+
+## Does it Support XYZ?
+
+If you're asking... I'll say probably, but probably not in the best way right now.
+
+If you can use `e('tw classes')` and it generate the classes (even if they don't actually work), then mostly likely all we need to do is create the `RegExp`.
+
+We export the generic functions you can use, but to have a better performance you probably want to use the `baseReplacer` that is exported from `easy-tailwind/transform` and use a `RegExp` that will fit XYZ.
+
+Feel free to open a PR if you get it working. =D
+
+If you need help with that, send me examples of how you can use EasyTailwind (a sandbox example would be best) in XYZ files and I'm sure we can work it out.
 
 ## Work with me
 
