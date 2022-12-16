@@ -154,8 +154,9 @@ Math.random(
 `);
   });
 
-  it('handles example from playground', () => {
-    // this one fails depending on the ordering
+  it('throws on example from playground', () => {
+    // this regex works in this case (breaks in others):
+    // /class(?:name)?={(?:.*?(?:e|etw)\()?([\s\S]*?)\)}/gis
 
     const fixtureWithMatches = `
     export function MyComponentWithWeirdThings() {
@@ -185,6 +186,20 @@ Math.random(
           }
         "
     `);
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(`
+Are you following EasyTailwind rules?
+
+Invalid or unexpected token in
+className={e(
+            'bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]',
+            'bg-[url(https://play.tailwindcss.com/img/grid.svg)]',
+            'absolute inset-0',
+          )}
+
+Trying to be transformed into:
+'bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0
+`);
   });
 
   it('handles etw inside a string template', () => {
