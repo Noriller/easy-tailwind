@@ -48,6 +48,39 @@ describe('react| .replacer()', () => {
     `);
   });
 
+  it('handles string with linebreaks', async () => {
+    const fixtureWithSimpleMatches = `
+      export function MyComponentWithMatches() {
+        return (
+          <div className="not using here">
+            <div className={e(
+                \`using
+                 with
+                 line
+                 breaks\`,
+                 'other classes'
+              )}>anything1</div>
+          </div>
+        );
+      }
+    `;
+
+    expect(replacer(fixtureWithSimpleMatches)).toMatchInlineSnapshot(`
+      "
+            export function MyComponentWithMatches() {
+              return (
+                <div className=\\"not using here\\">
+                  <div className={e(\\"using
+                       with
+                       line
+                       breaks other classes\\")}>anything1</div>
+                </div>
+              );
+            }
+          "
+    `);
+  });
+
   it('handles a file with a complex usage', () => {
     const fixtureWithComplexUsage = `
       export function MyComponentWithMatches() {
