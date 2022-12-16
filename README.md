@@ -178,9 +178,92 @@ Which is way faster and easier to understand, maintain and debug than:
 
 ### Break lines
 
+One of the uses is to "break lines" of the styles.
+
+For this, just split the clases into multiple strings and put each one in a single line.
+
+Example:
+
+```js
+<div
+  className={e(
+    'text-lg',
+    'font-medium',
+    'text-black',
+    'underline',
+    'decoration-cyan-500'
+  )}
+>
+  Multiple lines!
+</div>
+```
+
 ### Use Objects
 
+This is what you were waiting for, objects were the the keys are applied to whatever the value is, even nested structures.
+
+Example:
+
+```js
+<div
+  className={e({
+    sm: "text-sm text-blue-500",
+    md: "text-base text-green-500",
+    lg: ["text-lg text-black", {
+      hover: "text-red-500"
+    }],
+  })}
+>
+  Objects!
+</div>
+```
+
+This will create exactly what you would expect:
+
+```js
+"sm:text-sm sm:text-blue-500 md:text-base md:text-green-500 lg:text-lg lg:text-black lg:hover:text-red-500"
+```
+
+Each key (sm, md, lg, [&_li], group-hover, ...) will apply to everything inside the value.
+
+Each value can be a string, another object, or an array with strings and/or objects.
+
+> ⚠️ The ordering is applied in the order of the object.
+>
+> Some Tailwind classes don't work properly depending on the order,
+>
+> so always check if what you will be building is valid.
+
 ### Conditional classes
+
+One thing we usually need are conditional classes, we got you covered!
+
+As long as you follow [the rules](#rules-for-it-to-work):
+
+- Use boolean values for conditional expressions (ternary, &&, ||, ??, etc...)
+- Don't add variables other than the boolean for the conditional expressions
+
+Example:
+
+```js
+const boolean = Math.random() > 0.5;
+// ...
+<div
+  className={e(
+    boolean ? 'text-lg' : 'text-base',
+    boolean && 'font-medium',
+    !boolean && 'text-black',
+  )}
+>
+  Conditional classes!
+</div>
+```
+
+## Rules for it to work
+
+- Use boolean values for conditional expressions (ternary, &&, ||, ??, etc...)
+- Don't add variables other than the boolean for the conditional expressions
+- Don't use round brackets inside `e`/`etw`.
 
 ### Known limitations
 
@@ -191,11 +274,6 @@ Right now, depending on the classes you're trying, especially if they have round
 When you're inspecting it in the browser, it will show the classes as normal, but it won't work (the function works as normal, but the transformer won't be able to parse it and the classes won't be added and sent to the browser).
 
 In those cases, you can append them separately from those you use with `EasyTailwind`.
-
-## Rules for it to work
-
-- Use boolean values for conditional expressions (ternary, &&, ||, ??, etc...)
-- Don't add variables other than the boolean for the conditional expressions
 
 ### Why is this necessary?
 
