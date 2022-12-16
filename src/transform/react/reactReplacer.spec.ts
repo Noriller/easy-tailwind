@@ -106,11 +106,10 @@ describe('react| .replacer()', () => {
     `;
     expect(replacer(fixtureWithError)).toEqual(fixtureWithError);
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      `
+    expect(consoleErrorSpy).toHaveBeenCalledWith(`
 Are you following EasyTailwind rules?
 
-Unexpected string in
+Unexpected token ']' in
 className={
               e(
                 Math.random() > 0.5 ? 'using with e' : 'but with error'
@@ -118,9 +117,8 @@ className={
             }
 
 Trying to be transformed into:
-Math.random() > 0.\"using with e but with error\"
-`,
-    );
+Math.random(
+`);
   });
 
   it('handles example from playground', () => {
@@ -144,7 +142,41 @@ Math.random() > 0.\"using with e but with error\"
           export function MyComponentWithWeirdThings() {
             return (
               <div
-                className={e(\\"bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] bg-[url(https://play.tailwindcss.com/img/grid.svg)] absolute inset-0\\")}
+                className={e(
+                  'bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]',
+                  'bg-[url(https://play.tailwindcss.com/img/grid.svg)]',
+                  'absolute inset-0',
+                )}
+              ></div>
+            )
+          }
+        "
+    `);
+  });
+
+  it('handles etw inside a string template', () => {
+    const fixtureWithTemplate = `
+    export function MyComponentWithWeirdThings() {
+      return (
+        <div
+          className={\`[((hard to parse with current regex classes))] \${
+            e(
+              'normal implementation classes',
+              'in multiple lines'
+            )
+          }\`}
+        ></div>
+      )
+    }
+  `;
+    expect(replacer(fixtureWithTemplate)).toMatchInlineSnapshot(`
+      "
+          export function MyComponentWithWeirdThings() {
+            return (
+              <div
+                className={\`[((hard to parse with current regex classes))] \${
+                  e(\\"normal implementation classes in multiple lines\\")
+                }\`}
               ></div>
             )
           }

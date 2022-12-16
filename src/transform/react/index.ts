@@ -3,7 +3,7 @@ import { baseReplacer } from '../baseReplacer';
 /**
  * This regex matches the syntax of class names and returns the $1 group as the args of the EasyTailwind function.
  */
-const findClasses = /class(?:name)?={\W*?(?:e|etw)\((.*?)\)\W*?}/gis;
+const findClasses = /class(?:name)?={.*?(?:e|etw)\((.*?)\).*?}/gis;
 
 /**
  * If you need to change something in the `content`, add more file extensios or
