@@ -174,7 +174,7 @@ Which is way faster and easier to understand, maintain and debug than:
 "text-lg font-medium text-black hover:underline hover:decoration-black sm:text-base sm:text-blue-500 sm:hover:decoration-cyan-500 lg:text-2xl lg:text-green-500 lg:hover:decoration-amber-500"
 ```
 
-> ℹ️ Style sense not included. 🤣
+> ℹ️ Sense of style not included. 🤣
 
 ### Break lines
 
@@ -183,6 +183,14 @@ Which is way faster and easier to understand, maintain and debug than:
 ### Conditional classes
 
 ### Known limitations
+
+The limitations are more about the `replacer` in the transform than in the main functions.
+
+Right now, depending on the classes you're trying, especially if they have round brackets, it will not work and you will be given a warning.
+
+When you're inspecting it in the browser, it will show the classes as normal, but it won't work (the function works as normal, but the transformer won't be able to parse it and the classes won't be added and sent to the browser).
+
+In those cases, you can append them separately from those you use with `EasyTailwind`.
 
 ## Rules for it to work
 
