@@ -111,6 +111,71 @@ module.exports = {
 
 ## How to use
 
+First, import `e` or `etw`:
+
+```js
+import { e } from 'easy-tailwind';
+// e and etw resolve to the same function
+```
+
+This is a pure function, so you can be sure that it will always return the same values as you pass the same values:
+
+```js
+e(
+  'some base classes here',
+  'breaking the line because',
+  'it was getting too long',
+  {
+    mod1: 'classes with mod1',
+    mod2: [
+      'classes with only mod2',
+      {
+        subMod1: 'nested classes with both',
+      },
+    ],
+  },
+);
+// this will return:
+('some base classes here breaking the line because it was getting too long mod1:classes mod1:with mod1:mod1 mod2:classes mod2:with mod2:only mod2:mod2 mod2:subMod1:nested mod2:subMod1:classes mod2:subMod1:with mod2:subMod1:both');
+```
+
+Now use it where you would use the Tailwind classes.
+
+Example below will use the React syntax, but as long as you can call it, it will probably work:
+
+```js
+<div
+  className={e(
+    'text-lg font-medium text-black',
+    {
+      hover: 'underline decoration-black',
+      sm: [
+        'text-base text-blue-500',
+        {
+          hover: 'decoration-cyan-500',
+        },
+      ],
+      lg: [
+        'text-2xl text-green-500',
+        {
+          hover: 'decoration-amber-500',
+        },
+      ],
+    }
+  )}
+>
+  EasyTailwind!!!
+</div>
+```
+
+Which is way faster and easier to understand, maintain and debug than:
+
+```js
+"text-lg font-medium text-black hover:underline hover:decoration-black sm:text-base sm:text-blue-500 sm:hover:decoration-cyan-500 lg:text-2xl lg:text-green-500 lg:hover:decoration-amber-500"
+```
+
+> ℹ️ Style sense not included. 🤣
+
 ### Break lines
 
 ### Use Objects
