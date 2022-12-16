@@ -4,8 +4,6 @@ An easier way of writing Tailwind classes.
 
 [Example to play around](https://stackblitz.com/edit/easy-tailwind?file=src/App.jsx)
 
-Still in beta, wait for actual release.
-
 ## Installation
 
 Install with your preferred manager:
@@ -24,7 +22,7 @@ pnpm add easy-tailwind
 
 ## Setup
 
-The configuration file is something like `tailwind.config.cjs`, and the basic configuration you need is:
+The configuration file is usually located in the `root` of the application and looks something like `tailwind.config.cjs`. The basic configuration you need is:
 
 ```js
 // tailwind.config.cjs
@@ -34,13 +32,15 @@ module.exports = {
   content,
   // ...
   theme: {
-    extend: {},
+    // ...
   },
-  plugins: [],
+  plugins: [
+    // ...
+  ],
 };
 ```
 
-If you need to override something in the config:
+If you need to override something in the `content` config:
 
 ```js
 // tailwind.config.cjs
@@ -54,15 +54,18 @@ module.exports = {
     ],
     transform: {
       DEFAULT: replacer, // default is applied to all files types
+
             // baseReplacer accepts a RegExp can work for your needs
       html: baseReplacer(/my regex for html/) // you can override for one file type
     },
   }
   // ...
   theme: {
-    extend: {},
+    // ...
   },
-  plugins: [],
+  plugins: [
+    // ...
+  ],
 };
 ```
 
@@ -82,9 +85,11 @@ module.exports = {
   content,
   // ...
   theme: {
-    extend: {},
+    // ...
   },
-  plugins: [],
+  plugins: [
+    // ...
+  ],
 };
 ```
 
@@ -103,9 +108,11 @@ module.exports = {
   }
   // ...
   theme: {
-    extend: {},
+    // ...
   },
-  plugins: [],
+  plugins: [
+    // ...
+  ],
 };
 ```
 
@@ -136,7 +143,7 @@ e(
   },
 );
 // this will return:
-('some base classes here breaking the line because it was getting too long mod1:classes mod1:with mod1:mod1 mod2:classes mod2:with mod2:only mod2:mod2 mod2:subMod1:nested mod2:subMod1:classes mod2:subMod1:with mod2:subMod1:both');
+'some base classes here breaking the line because it was getting too long mod1:classes mod1:with mod1:mod1 mod2:classes mod2:with mod2:only mod2:mod2 mod2:subMod1:nested mod2:subMod1:classes mod2:subMod1:with mod2:subMod1:both';
 ```
 
 Now use it where you would use the Tailwind classes.
@@ -242,6 +249,7 @@ As long as you follow [the rules](#rules-for-it-to-work):
 
 - Use boolean values for conditional expressions (ternary, &&, ||, ??, etc...)
 - Don't add variables other than the boolean for the conditional expressions
+- Don't use round brackets inside `e`/`etw`
 
 Example:
 
@@ -261,32 +269,40 @@ const boolean = Math.random() > 0.5;
 
 ## Rules for it to work
 
-- Use boolean values for conditional expressions (ternary, &&, ||, ??, etc...)
-- Don't add variables other than the boolean for the conditional expressions
-- Don't use round brackets inside `e`/`etw`.
+1. Use boolean values for conditional expressions (ternary, &&, ||, ??, etc...)
+2. Don't add variables other than the boolean for the conditional expressions
+3. Don't use round brackets inside `e`/`etw`
 
 ### Known limitations
 
-The limitations are more about the `replacer` in the transform than in the main functions.
+Those limitations are more about the `replacer` in the transform than in the main function.
 
-Right now, depending on the classes you're trying, especially if they have round brackets, it will not work and you will be given a warning.
+Right now, depending on the classes you're trying, especially if they have round brackets, it will not work and you will be given a warning (check the terminal where you're running your `dev` or `build` script).
 
 When you're inspecting it in the browser, it will show the classes as normal, but it won't work (the function works as normal, but the transformer won't be able to parse it and the classes won't be added and sent to the browser).
 
 In those cases, you can append them separately from those you use with `EasyTailwind`.
 
+Examples:
+
+```js
+className={`${variable} [&:has(complicated to parse)] ${e("here goes the safe to parse classes")}`}
+```
+
 ### Why is this necessary?
 
-Tailwind works with the JIT compiler that can create new classes on the class and inject them.
+Tailwind works with the JIT compiler that can create new classes on the fly and inject them.
 
 For it to work, they need to scan all the files looking for the classes, but when you use `EasyTailwind`,
 you're basically compressing many of the classes you're trying to use. So we need to add an extra step to Tailwind.
 
-In the Tailwind config (`tailwind.config.cjs`) you add the files it will scan for tailwind classes and a transform that uses a function that will resolve ahead of time what EasyTailwind can produce, so Tailwind can inject ahead of time all possible classes.
+In the Tailwind config (`tailwind.config.cjs`) you add the files it will scan for tailwind classes and a transform that uses a function that will resolve ahead of time what `EasyTailwind` can produce, so Tailwind can inject ahead of time all possible classes.
 
 However, the more complicated and inclusive you want it to scan for, the more you loose performance (for running in dev mode and for build).
 
 The best balance to be able to accept having conditional classes while minimizing impact on performance is to simplify this, looking for only a boolean variable and not something that can be as simple as a variable or as complex as complex can be.
+
+As for the round brackets, it's mostly a RegExp problem/limitation where I couldn't cover all the cases I wanted to cover.
 
 See more at [Tailwind "Tranfsforming source files"](https://tailwindcss.com/docs/content-configuration#transforming-source-files).
 
@@ -314,6 +330,13 @@ This doesn't mean that it's "dead", just that it's doing what it needs.
 Today it works with Tailwind v3, I'm not sure if with lower versions or for higher versions.
 As long as the `content` part doesn't change, then you can just import and use it.
 If it changes, you have the `replacer` for the transformations (as long as it supports it), but expect updates as soon as possible.
+
+### Possible roadmap
+
+It's way easier to get a match that captures too much than an group that matches only what is needed.
+
+I'm thinking on using RegExp to narrow down and a custom, string manipulation, function to get only what's needed.
+This would mean being able to use anything inside `EasyTailwind` (Aside from rules 1 and 2).
 
 ## Work with me
 
