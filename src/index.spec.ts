@@ -127,6 +127,10 @@ describe('EasyTW', () => {
   );
 
   it('accepts alternatives syntax', () => {
+    // this syntax don't work with the replacers, so it shouldn't be used directly
+    // (I've learned about having to transform the files afterwards and had a different idea on how it could be used)
+    // it's possible I'll refactor it since there's no gain to having it
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     expect(e.mod('classes', 'and more classes')).toEqual([
