@@ -36,13 +36,13 @@ This doesn't cover all cases they do, and you could use all of them in conjuncti
 
 This is a utility to be used with Tailwind. If you're using Tailwind, you want to consider using this.
 
-This is a tool to increase Developer Experience. The Tailwind world class extension still work, even while writing with EasyTailwind. (It doesn't show the whole CSS class generated, but it shows the important part.)
+This is a tool to increase Developer Experience. The Tailwind world-class extension still works, even while writing with EasyTailwind. (It doesn't show the whole CSS class generated, but it shows the important part.)
 
 This is a tool for cleaner code. You might not agree, but I developed that in mind.
 
 This is like "table salt", salt is good but you don't want to cover everything in it.
 
-If you have just a couple of classes then there's no need to call it. Call it when you have multiple classes, specially with modifiers or when you need to toggle classes.
+If you have just a couple of classes then there's no need to call it. Call it when you have multiple classes, especially with modifiers or when you need to toggle classes.
 
 Go to: [Table of Contents](#table-of-contents)
 
