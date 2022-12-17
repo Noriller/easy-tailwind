@@ -4,6 +4,48 @@ An easier way of writing Tailwind classes.
 
 [Example to play around](https://stackblitz.com/edit/easy-tailwind?file=src/App.jsx)
 
+## Table of Contents
+
+- [What this is and what this isn't](#what-this-is-and-what-this-isnt)
+- [Installation](#installation)
+- [Setup](#setup)
+- [How to Use](#how-to-use)
+  - [Break Lines](#break-lines)
+  - [Use Objects](#use-objects)
+  - [Conditional Classes](#conditional-classes)
+- [Rules for it to Work](#rules-for-it-to-work)
+- [Does it Support XYZ?](#does-it-support-xyz)
+- [Final Considerations](#final-considerations)
+- [Possible Roadmap](#possible-roadmap)
+
+## What this is and what this isn't
+
+### What this isn't
+
+This is not [`WindiCSS`](https://github.com/windicss/windicss), [`UnoCSS`](https://github.com/unocss/unocss) or any other CSS lib or framework. This isn't meant to replace them.
+
+This is meant to be used with Tailwind. So, if you're not using Tailwind, you don't want this.
+
+### What this might be
+
+If you use [`classnames`](https://github.com/JedWatson/classnames), [`clsx`](https://github.com/lukeed/clsx/) and other utilities to have conditional classes, then this might be a replacement for them.
+
+This doesn't cover all cases they do, and you could use all of them in conjunction if you want. But if you just use them for class toggling, then you might want to consider replacing them with this.
+
+### What this is
+
+This is a utility to be used with Tailwind. If you're using Tailwind, you want to consider using this.
+
+This is a tool to increase Developer Experience. The Tailwind world class extension still work, even while writing with EasyTailwind. (It doesn't show the whole CSS class generated, but it shows the important part.)
+
+This is a tool for cleaner code. You might not agree, but I developed that in mind.
+
+This is like "table salt", salt is good but you don't want to cover everything in it.
+
+If you have just a couple of classes then there's no need to call it. Call it when you have multiple classes, specially with modifiers or when you need to toggle classes.
+
+Go to: [Table of Contents](#table-of-contents)
+
 ## Installation
 
 Install with your preferred manager:
@@ -19,6 +61,8 @@ yarn add easy-tailwind
 ```bash
 pnpm add easy-tailwind
 ```
+
+Go to: [Table of Contents](#table-of-contents)
 
 ## Setup
 
@@ -116,6 +160,8 @@ module.exports = {
 };
 ```
 
+Go to: [Table of Contents](#table-of-contents)
+
 ## How to use
 
 First, import `e` or `etw`:
@@ -183,6 +229,8 @@ Which is way faster and easier to understand, maintain and debug than:
 
 > ℹ️ Sense of style not included. 🤣
 
+Go to: [Table of Contents](#table-of-contents)
+
 ### Break lines
 
 One of the uses is to "break lines" of the styles.
@@ -204,6 +252,8 @@ Example:
   Multiple lines!
 </div>
 ```
+
+Go to: [Table of Contents](#table-of-contents)
 
 ### Use Objects
 
@@ -241,6 +291,8 @@ Each value can be a string, another object, or an array with strings and/or obje
 >
 > so always check if what you will be building is valid.
 
+Go to: [Table of Contents](#table-of-contents)
+
 ### Conditional classes
 
 One thing we usually need is conditional classes, we got you covered!
@@ -267,11 +319,15 @@ const boolean = Math.random() > 0.5;
 </div>
 ```
 
+Go to: [Table of Contents](#table-of-contents)
+
 ## Rules for it to work
 
 1. Use boolean values for conditional expressions (ternary, &&, ||, ??, etc...)
 2. Don't add variables other than the boolean for the conditional expressions
 3. Don't use round brackets inside `e`/`etw`
+
+Go to: [Table of Contents](#table-of-contents)
 
 ### Known limitations
 
@@ -306,6 +362,8 @@ As for the round brackets, it's mostly a RegExp problem/limitation where I could
 
 See more at [Tailwind "Transforming source files"](https://tailwindcss.com/docs/content-configuration#transforming-source-files).
 
+Go to: [Table of Contents](#table-of-contents)
+
 ## Does it Support XYZ?
 
 If you're asking... I'll say probably, but probably not in the best way right now.
@@ -320,6 +378,8 @@ If you need help with that, send me examples of how you can use EasyTailwind (a 
 
 See more at [Tailwind "Transforming source files"](https://tailwindcss.com/docs/content-configuration#transforming-source-files).
 
+Go to: [Table of Contents](#table-of-contents)
+
 ## Final Considerations
 
 These are mostly 'pure' functions, so we don't need to worry about getting "stale".
@@ -331,12 +391,16 @@ Today it works with Tailwind v3, I'm not sure if with lower versions or for high
 As long as the `content` part doesn't change, then you can just import and use it.
 If it changes, you have the `replacer` for the transformations (as long as it supports it) but expect updates as soon as possible.
 
+Go to: [Table of Contents](#table-of-contents)
+
 ### Possible roadmap
 
 It's way easier to get a match that captures too much than a group that matches only what is needed.
 
 I'm thinking of using RegExp to narrow down and a custom, string manipulation, function to get only what's needed.
 This would mean being able to use anything inside `EasyTailwind` (Aside from rules 1 and 2).
+
+Go to: [Table of Contents](#table-of-contents)
 
 ## Work with me
 
