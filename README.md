@@ -69,9 +69,9 @@ module.exports = {
 };
 ```
 
-### Especific configuration for frameworks
+### Specific configuration for frameworks
 
-Right now, the only especific one is `React`, instead of importing from `easy-tailwind/transform`, import from `easy-tailwind/transform/react`
+Right now, the only specific one is `React`, instead of importing from `easy-tailwind/transform`, import from `easy-tailwind/transform/react`
 
 While `baseReplacer` is exported only from the root of `easy-tailwind/transform`, for each framework supported `content` and `replacer` will be exported.
 
@@ -187,7 +187,7 @@ Which is way faster and easier to understand, maintain and debug than:
 
 One of the uses is to "break lines" of the styles.
 
-For this, just split the clases into multiple strings and put each one in a single line.
+For this, just split the classes into multiple strings and put each one in a single line.
 
 Example:
 
@@ -207,7 +207,7 @@ Example:
 
 ### Use Objects
 
-This is what you were waiting for, objects were the the keys are applied to whatever the value is, even nested structures.
+This is what you were waiting for, objects where the keys are applied to whatever the value is, even nested structures.
 
 Example:
 
@@ -243,7 +243,7 @@ Each value can be a string, another object, or an array with strings and/or obje
 
 ### Conditional classes
 
-One thing we usually need are conditional classes, we got you covered!
+One thing we usually need is conditional classes, we got you covered!
 
 As long as you follow [the rules](#rules-for-it-to-work):
 
@@ -298,19 +298,19 @@ you're basically compressing many of the classes you're trying to use. So we nee
 
 In the Tailwind config (`tailwind.config.cjs`) you add the files it will scan for tailwind classes and a transform that uses a function that will resolve ahead of time what `EasyTailwind` can produce, so Tailwind can inject ahead of time all possible classes.
 
-However, the more complicated and inclusive you want it to scan for, the more you loose performance (for running in dev mode and for build).
+However, the more complicated and inclusive you want it to scan for, the more you lose performance (for running in dev mode and for build).
 
-The best balance to be able to accept having conditional classes while minimizing impact on performance is to simplify this, looking for only a boolean variable and not something that can be as simple as a variable or as complex as complex can be.
+The best balance to be able to accept having conditional classes while minimizing the impact on performance is to simplify this, looking for only a boolean variable and not something that can be as simple as a variable or as complex as complex can be.
 
 As for the round brackets, it's mostly a RegExp problem/limitation where I couldn't cover all the cases I wanted to cover.
 
-See more at [Tailwind "Tranfsforming source files"](https://tailwindcss.com/docs/content-configuration#transforming-source-files).
+See more at [Tailwind "Transforming source files"](https://tailwindcss.com/docs/content-configuration#transforming-source-files).
 
 ## Does it Support XYZ?
 
 If you're asking... I'll say probably, but probably not in the best way right now.
 
-If you can use `e('tw classes')` and it generate the classes (even if they don't actually work), then mostly likely all we need to do is create the `RegExp`.
+If you can use `e('tw classes')` and it generates the classes (even if they don't actually work), then most likely all we need to do is create the `RegExp`.
 
 We export the generic functions you can use, but to have a better performance you probably want to use the `baseReplacer` that is exported from `easy-tailwind/transform` and use a `RegExp` that will fit XYZ.
 
@@ -318,24 +318,24 @@ Feel free to open a PR if you get it working. =D
 
 If you need help with that, send me examples of how you can use EasyTailwind (a sandbox example would be best) in XYZ files and I'm sure we can work it out.
 
-See more at [Tailwind "Tranfsforming source files"](https://tailwindcss.com/docs/content-configuration#transforming-source-files).
+See more at [Tailwind "Transforming source files"](https://tailwindcss.com/docs/content-configuration#transforming-source-files).
 
 ## Final Considerations
 
-This is mostly 'pure' functions, so we don't need to worry about getting "stale".
+These are mostly 'pure' functions, so we don't need to worry about getting "stale".
 
 More functionalities are welcome, but ultimately this package can have months between any updates.
 This doesn't mean that it's "dead", just that it's doing what it needs.
 
 Today it works with Tailwind v3, I'm not sure if with lower versions or for higher versions.
 As long as the `content` part doesn't change, then you can just import and use it.
-If it changes, you have the `replacer` for the transformations (as long as it supports it), but expect updates as soon as possible.
+If it changes, you have the `replacer` for the transformations (as long as it supports it) but expect updates as soon as possible.
 
 ### Possible roadmap
 
-It's way easier to get a match that captures too much than an group that matches only what is needed.
+It's way easier to get a match that captures too much than a group that matches only what is needed.
 
-I'm thinking on using RegExp to narrow down and a custom, string manipulation, function to get only what's needed.
+I'm thinking of using RegExp to narrow down and a custom, string manipulation, function to get only what's needed.
 This would mean being able to use anything inside `EasyTailwind` (Aside from rules 1 and 2).
 
 ## Work with me
