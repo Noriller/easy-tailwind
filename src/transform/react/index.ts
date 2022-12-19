@@ -1,34 +1,4 @@
-import { baseReplacer } from '../baseReplacer';
-
-/**
- * This regex matches the syntax of class names and returns the $1 group as the args of the EasyTailwind function.
- */
-const findClasses = /class(?:name)?={.*?(?:e|etw)\((.*?)\).*?}/gis;
-
-/**
- * If you need to change something in the `content`, add more file extensios or
- * want to support the React extension somewhere else, you can use this.
- *
- * This is a replacer that will work with
- * React syntax of `className={e(* anything goes here *)}` or `className={etw(* anything goes here *)}`
- *
- * Then in `tailwind.config.cjs`
- *
- *```js
-  module.exports = {
-    content: {
-      // ...
-      transform: {
-        // ...,
-        'my-file-type': replacer,
-        DEFAULT: replacer, // default is a catch all
-      }
-    },
-    // ...
-  }
- * ```
- */
-export const replacer = baseReplacer(findClasses);
+import { replacer } from '..';
 
 /**
  * `content` key for use in React apps with Tailwind.
@@ -55,8 +25,7 @@ export const replacer = baseReplacer(findClasses);
   }
  * ```
  *
- * Where the `replacer` is also exported from this folder and returns whats needed
- * for it to be able to work properly
+ * Where the `replacer` is exported from the index of the `/transform` folder.
  *
  * "DEFAULT" is used in all file types, but you can override each file type by extension name
  */
