@@ -2,8 +2,7 @@ import { expect, jest, it, describe } from '@jest/globals';
 import { baseReplacer } from '.';
 
 describe('.baseReplacer()', () => {
-  const catchAllRegex = /e\((.*)\)/gis;
-  const replacer = baseReplacer(catchAllRegex);
+  const replacer = baseReplacer(/e\(./gis);
 
   const consoleErrorSpy = jest.spyOn(
     globalThis.console,
@@ -21,7 +20,7 @@ describe('.baseReplacer()', () => {
   });
 
   it('return the just the content when no matches are found', () => {
-    expect(replacer(`e("content")`)).toEqual('e("content")');
+    expect(replacer(`"content"`)).toEqual('"content"');
   });
 
   it.each([
@@ -29,7 +28,7 @@ describe('.baseReplacer()', () => {
     `!boolean ? "my" : "classes"`,
     `!!boolean ? "my" : "classes"`,
   ])('replaces a ternary: %s', (content) => {
-    expect(replacer(`e(${content})`)).toEqual('e("my classes")');
+    expect(replacer(`e(${content})`)).toEqual(`e(${content})\nmy classes`);
   });
 
   it.each([
@@ -43,25 +42,25 @@ describe('.baseReplacer()', () => {
     `!!boolean || "my classes"`,
     `!!boolean ?? "my classes"`,
   ])('replaces conditionals: %s', (content) => {
-    expect(replacer(`e(${content})`)).toEqual('e("my classes")');
+    expect(replacer(`e(${content})`)).toEqual(`e(${content})\nmy classes`);
   });
 
   it.each([
-    { content: `boolean && ["my", "classes"]`, result: 'e("my classes")' },
+    { content: `boolean && ["my", "classes"]`, result: 'my classes' },
     {
       content: `boolean && {
         mod:"my classes"
       }`,
-      result: 'e("mod:my mod:classes")',
+      result: 'mod:my mod:classes',
     },
     {
       content: `{ my: boolean && [ { mod:"classes" } ] }`,
-      result: 'e("my:mod:classes")',
+      result: 'my:mod:classes',
     },
   ])(
     'replaces conditionals with objects: $content | return $result',
     ({ content, result }) => {
-      expect(replacer(`e(${content})`)).toEqual(result);
+      expect(replacer(`e(${content})`)).toEqual(`e(${content})\n${result}`);
     },
   );
 
@@ -74,22 +73,22 @@ describe('.baseReplacer()', () => {
     expect(replacer(`e(${content})`)).toEqual(`e(${content})`);
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      `\nAre you following EasyTailwind rules?\n\nmy is not defined in\ne(${content})\n\nTrying to be transformed into:\n${content}\n`,
+      `\nAre you following EasyTailwind rules?\n\nmy is not defined in\n${content}\n\nTrying to be transformed into:\n${content}\n`,
     );
   });
 
   it('returns the content without throwing when no matchs are found', () => {
     const content = 'content';
-    expect(baseReplacer(/no match/)(content)).toEqual(content);
+    expect(baseReplacer(/no match/g)(content)).toEqual(content);
     expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
   });
 
-  it('throws when no group is found in the match', () => {
+  it('throws when using regex without global flag', () => {
     const content = 'content';
-    expect(baseReplacer(/.*/)(content)).toEqual(content);
+    expect(baseReplacer(/no match/)(content)).toEqual(content);
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      `\nAre you following EasyTailwind rules?\n\n$1.replace is not a function in file\ncontent\n`,
+      `\nAre you following EasyTailwind rules?\n\nString.prototype.matchAll called with a non-global RegExp argument in file\ncontent\n`,
     );
   });
 });
