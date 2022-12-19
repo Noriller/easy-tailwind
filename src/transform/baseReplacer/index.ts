@@ -4,16 +4,16 @@ import { e } from '../..';
  * This matches the &&, ||, ?? operators that are used for conditional classes.
  * The first group is the whole match.
  */
-const replaceAndOr = /((!*?\w+) (&&|\|\||\?\?) )/gis;
+const replaceAndOr = /((!*?\w+)\s*?(&&|\|\||\?\?))/gis;
 
 /**
  * This matches the ternary style operator and returns as the 2 groups the true and false matches.
  */
 const replaceTernary =
-  /(?:!*?\w+)\s*\?\s*(?<q1>['"])(?<m1>.*?)\k<q1>\s*:\s*(?<q2>['"])(?<m2>.*?)\k<q2>/gis;
+  /(?:!*?\w+)\s*\?\s*(?<q1>['"`])(?<m1>.*?)\k<q1>\s*:\s*(?<q2>['"`])(?<m2>.*?)\k<q2>/gis;
 
 /**
- * If any of the available transforms arent suited for your needs,
+ * If any of the available transforms aren't suited for your needs,
  * then you can use this baseReplacer function to create a replacer
  * that will work for you.
  *
