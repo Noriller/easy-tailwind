@@ -159,6 +159,40 @@ module.exports = {
 
 Go to: [Table of Contents](#table-of-contents)
 
+### Renaming the exports
+
+If you rename the exports to something other than `e` or `etw`, or maybe you want to use only one because you're already using another function with the same name, then you need to change the `replacer` with the `customNameReplacer` (exported from `easy-tailwind/transform`).
+
+Example:
+
+```js
+// tailwind.config.cjs
+const { customNameReplacer } = require('easy-tailwind/transform');
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: {
+    files: [
+      '!node_modules',
+      './**/*.{js,ts,jsx,tsx,html,vue,svelte,astro}' // here you can specify your own files and directories
+    ],
+    transform: {
+      DEFAULT: customNameReplacer('newFuncName1', 'newFuncName2'), // default is applied to all files types
+      'some-file-extension': customNameReplacer('etw'), // this one you know you're only using `etw`
+      'some-other-file-extension': customNameReplacer('newFuncName'), // this one you know you're only using `newFuncName'
+    },
+  }
+  // ...
+  theme: {
+    // ...
+  },
+  plugins: [
+    // ...
+  ],
+};
+```
+
+Go to: [Table of Contents](#table-of-contents)
+
 ## How to use
 
 First, import `e` or `etw`:
