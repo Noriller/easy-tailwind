@@ -1,4 +1,4 @@
-import { replacer } from '.';
+import { replacer } from '..';
 
 describe('react| .replacer()', () => {
   const consoleErrorSpy = jest.spyOn(
@@ -39,12 +39,14 @@ describe('react| .replacer()', () => {
             export function MyComponentWithMatches() {
               return (
                 <div className=\\"not using here\\">
-                  <div className={e(\\"using with e\\")}>anything1</div>
-                  <div className={etw(\\"using with etw\\")}>anything2</div>
+                  <div className={e('using with e')}>anything1</div>
+                  <div className={etw('using with etw')}>anything2</div>
                 </div>
               );
             }
-          "
+          
+      using with e
+      using with etw"
     `);
   });
 
@@ -70,14 +72,21 @@ describe('react| .replacer()', () => {
             export function MyComponentWithMatches() {
               return (
                 <div className=\\"not using here\\">
-                  <div className={e(\\"using
+                  <div className={e(
+                      \`using
                        with
                        line
-                       breaks other classes\\")}>anything1</div>
+                       breaks\`,
+                       'other classes'
+                    )}>anything1</div>
                 </div>
               );
             }
-          "
+          
+      using
+                       with
+                       line
+                       breaks other classes"
     `);
   });
 
@@ -114,12 +123,26 @@ describe('react| .replacer()', () => {
               return (
                 <div className=\\"not using here\\">
                   <div className={
-                    e(\\"using with e in a complex manner mod1:value mod1:other mod2:sub1:random another:true another:false another2:something\\")
+                    e(
+                      'using with e',
+                      \\"in a complex manner\\",
+                      {
+                        mod1: [\\"value\\", \\"other\\"],
+                        mod2: {
+                          sub1: random && \\"random\\",
+                        },
+                      },
+                      {
+                        another: random ? \\"true\\" : \\"false\\",
+                        another2: !!random || \\"something\\"
+                      }
+                    )
                   }>anything1</div>
                 </div>
               )
             }
-          "
+          
+      using with e in a complex manner mod1:value mod1:other mod2:sub1:random another:true another:false another2:something"
     `);
   });
 
@@ -142,22 +165,17 @@ describe('react| .replacer()', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith(`
 Are you following EasyTailwind rules?
 
-Unexpected token ']' in
-className={
-              e(
-                Math.random() > 0.5 ? 'using with e' : 'but with error'
-              )
-            }
+Unexpected string in
+
+                Math.random() > 0.5 ? \'using with e\' : \'but with error\'
+              
 
 Trying to be transformed into:
-Math.random(
+Math.random() > 0."using with e but with error"
 `);
   });
 
-  it('throws on example from playground', () => {
-    // this regex works in this case (breaks in others):
-    // /class(?:name)?={(?:.*?(?:e|etw)\()?([\s\S]*?)\)}/gis
-
+  it('handles example from playground', () => {
     const fixtureWithMatches = `
     export function MyComponentWithWeirdThings() {
       return (
@@ -184,22 +202,9 @@ Math.random(
               ></div>
             )
           }
-        "
+        
+      bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] bg-[url(https://play.tailwindcss.com/img/grid.svg)] absolute inset-0"
     `);
-    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(`
-Are you following EasyTailwind rules?
-
-Invalid or unexpected token in
-className={e(
-            'bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]',
-            'bg-[url(https://play.tailwindcss.com/img/grid.svg)]',
-            'absolute inset-0',
-          )}
-
-Trying to be transformed into:
-'bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0
-`);
   });
 
   it('handles etw inside a string template', () => {
@@ -223,12 +228,16 @@ Trying to be transformed into:
             return (
               <div
                 className={\`[((hard to parse with current regex classes))] \${
-                  e(\\"normal implementation classes in multiple lines\\")
+                  e(
+                    'normal implementation classes',
+                    'in multiple lines'
+                  )
                 }\`}
               ></div>
             )
           }
-        "
+        
+      normal implementation classes in multiple lines"
     `);
   });
 });

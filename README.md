@@ -16,7 +16,7 @@ An easier way of writing Tailwind classes.
 - [Rules for it to Work](#rules-for-it-to-work)
 - [Does it Support XYZ?](#does-it-support-xyz)
 - [Final Considerations](#final-considerations)
-- [Possible Roadmap](#possible-roadmap)
+- [Why "Easy" Tailwind?](#why-easy-tailwind)
 
 ## What this is and what this isn't
 
@@ -30,13 +30,15 @@ This is meant to be used with Tailwind. So, if you're not using Tailwind, you do
 
 If you use [`classnames`](https://github.com/JedWatson/classnames), [`clsx`](https://github.com/lukeed/clsx/) and other utilities to have conditional classes, then this might be a replacement for them.
 
-This doesn't cover all cases they do, and you could use all of them in conjunction if you want. But if you just use them for class toggling, then you might want to consider replacing them with this.
+This doesn't cover all cases they do, and you could use all of them in conjunction if you want (they would wrap `e`/`etw` functions).
+
+But if you just use them for class toggling and use Tailwind, then you might want to consider replacing them with this.
 
 ### What this is
 
 This is a utility to be used with Tailwind. If you're using Tailwind, you want to consider using this.
 
-This is a tool to increase Developer Experience. The Tailwind world-class extension still works, even while writing with EasyTailwind. (It doesn't show the whole CSS class generated, but it shows the important part.)
+This is a tool to increase Developer Experience. The Tailwind world-class extension still works, even while writing with EasyTailwind. (It doesn't show the whole CSS class generated when using the modifiers, but it shows the important part.)
 
 This is a tool for cleaner code. You might not agree, but I developed that in mind.
 
@@ -88,7 +90,7 @@ If you need to override something in the `content` config:
 
 ```js
 // tailwind.config.cjs
-const { replacer, baseReplacer } = require('easy-tailwind/transform');
+const { replacer } = require('easy-tailwind/transform');
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: {
@@ -98,9 +100,6 @@ module.exports = {
     ],
     transform: {
       DEFAULT: replacer, // default is applied to all files types
-
-            // baseReplacer accepts a RegExp can work for your needs
-      html: baseReplacer(/my regex for html/) // you can override for one file type
     },
   }
   // ...
@@ -116,8 +115,6 @@ module.exports = {
 ### Specific configuration for frameworks
 
 Right now, the only specific one is `React`, instead of importing from `easy-tailwind/transform`, import from `easy-tailwind/transform/react`
-
-While `baseReplacer` is exported only from the root of `easy-tailwind/transform`, for each framework supported `content` and `replacer` will be exported.
 
 In the example for `React`:
 
@@ -141,13 +138,47 @@ Where `content` is equivalent to:
 
 ```js
 // tailwind.config.cjs
-const { replacer } = require('easy-tailwind/transform/react');
+const { replacer } = require('easy-tailwind/transform');
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: {
     files: ['!node_modules', './**/*.{js,ts,jsx,tsx,html}'],
     transform: {
       DEFAULT: replacer,
+    },
+  }
+  // ...
+  theme: {
+    // ...
+  },
+  plugins: [
+    // ...
+  ],
+};
+```
+
+Go to: [Table of Contents](#table-of-contents)
+
+### Renaming the exports
+
+If you rename the exports to something other than `e` or `etw`, or maybe you want to use only one because you're already using another function with the same name, then you need to change the `replacer` with the `customNameReplacer` (exported from `easy-tailwind/transform`).
+
+Example:
+
+```js
+// tailwind.config.cjs
+const { customNameReplacer } = require('easy-tailwind/transform');
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: {
+    files: [
+      '!node_modules',
+      './**/*.{js,ts,jsx,tsx,html,vue,svelte,astro}' // here you can specify your own files and directories
+    ],
+    transform: {
+      DEFAULT: customNameReplacer('newFuncName1', 'newFuncName2'), // default is applied to all files types
+      'some-file-extension': customNameReplacer('etw'), // this one you know you're only using `etw`
+      'some-other-file-extension': customNameReplacer('newFuncName'), // this one you know you're only using `newFuncName'
     },
   }
   // ...
@@ -301,7 +332,6 @@ As long as you follow [the rules](#rules-for-it-to-work):
 
 - Use boolean values for conditional expressions (ternary, &&, ||, ??, etc...)
 - Don't add variables other than the boolean for the conditional expressions
-- Don't use round brackets inside `e`/`etw`
 
 Example:
 
@@ -325,15 +355,14 @@ Go to: [Table of Contents](#table-of-contents)
 
 1. Use boolean values for conditional expressions (ternary, &&, ||, ??, etc...)
 2. Don't add variables other than the boolean for the conditional expressions
-3. Don't use round brackets inside `e`/`etw`
 
 Go to: [Table of Contents](#table-of-contents)
 
 ### Known limitations
 
-Those limitations are more about the `replacer` in the transform than in the main function.
+Those limitations are about the `replacer` in the transform.
 
-Right now, depending on the classes you're trying, especially if they have round brackets, it will not work and you will be given a warning (check the terminal where you're running your `dev` or `build` script).
+Right now, depending on what you try to use in the `e` function, it will not work and you will be given a warning (check the terminal where you're running your `dev` or `build` script).
 
 When you're inspecting it in the browser, it will show the classes as normal, but it won't work (the function works as normal, but the transformer won't be able to parse it and the classes won't be added and sent to the browser).
 
@@ -342,7 +371,7 @@ In those cases, you can append them separately from those you use with `EasyTail
 Examples:
 
 ```js
-className={`${variable} [&:has(complicated to parse)] ${e("here goes the safe to parse classes")}`}
+className={`${variable} ${Math.random() > 0.5 ? "more" : "less"} ${e("here goes the safe to parse classes")}`}
 ```
 
 ### Why is this necessary?
@@ -358,25 +387,17 @@ However, the more complicated and inclusive you want it to scan for, the more yo
 
 The best balance to be able to accept having conditional classes while minimizing the impact on performance is to simplify this, looking for only a boolean variable and not something that can be as simple as a variable or as complex as complex can be.
 
-As for the round brackets, it's mostly a RegExp problem/limitation where I couldn't cover all the cases I wanted to cover.
-
 See more at [Tailwind "Transforming source files"](https://tailwindcss.com/docs/content-configuration#transforming-source-files).
 
 Go to: [Table of Contents](#table-of-contents)
 
 ## Does it Support XYZ?
 
-If you're asking... I'll say probably, but probably not in the best way right now.
+Probably.
 
-If you can use `e('tw classes')` and it generates the classes (even if they don't actually work), then most likely all we need to do is create the `RegExp`.
+If you can use `e('tw classes')` and it generates the classes (even if they don't actually work), then just follow the setup part.
 
-We export the generic functions you can use, but to have a better performance you probably want to use the `baseReplacer` that is exported from `easy-tailwind/transform` and use a `RegExp` that will fit XYZ.
-
-Feel free to open a PR if you get it working. =D
-
-If you need help with that, send me examples of how you can use EasyTailwind (a sandbox example would be best) in XYZ files and I'm sure we can work it out.
-
-See more at [Tailwind "Transforming source files"](https://tailwindcss.com/docs/content-configuration#transforming-source-files).
+If you want me to add a custom `content` for the framework you're using, feel free to open a PR. =D
 
 Go to: [Table of Contents](#table-of-contents)
 
@@ -393,12 +414,19 @@ If it changes, you have the `replacer` for the transformations (as long as it su
 
 Go to: [Table of Contents](#table-of-contents)
 
-### Possible roadmap
+### Why "Easy" Tailwind?
 
-It's way easier to get a match that captures too much than a group that matches only what is needed.
+I'm lazy.
 
-I'm thinking of using RegExp to narrow down and a custom, string manipulation, function to get only what's needed.
-This would mean being able to use anything inside `EasyTailwind` (Aside from rules 1 and 2).
+And while I'm already productive using Tailwind, I don't like to keep repeating the same modifiers over and over again.
+
+So, it's "easy" to type.
+
+Another thing is about reading the classes. It's easy to get a long string with all classes jumbled together, even with extensions sorting and linting them it's hard to keep in mind everything that's happening at once.
+
+So, it's "easy" to read.
+
+And well, naming is hard and I went with the first thing I thought about. =p
 
 Go to: [Table of Contents](#table-of-contents)
 

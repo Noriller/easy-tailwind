@@ -1,7 +1,7 @@
 {
   "name": "easy-tailwind",
   "private": false,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "An easier way of writing Tailwind classes.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -19,9 +19,7 @@
     "prepackPublish": "$npm_execpath run build:prod",
     "packPublish": "node buildPack.js",
     "packPublish:dryRun": "$npm_execpath run packPublish && npm publish ./out/*.tgz --dry-run",
-    "packPublish:publish": "$npm_execpath run packPublish && $npm_execpath publish ./out/*.tgz",
-    "benchmark:run": "for file in performance/tests/*; do node \"$file\"; done",
-    "benchmark": "$npm_execpath run build:prod && $npm_execpath run benchmark:run"
+    "packPublish:publish": "$npm_execpath run packPublish && $npm_execpath publish ./out/*.tgz"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
@@ -53,6 +51,7 @@
     "tailwind",
     "chakra",
     "class",
+    "clsx",
     "classnames"
   ],
   "jest": {
