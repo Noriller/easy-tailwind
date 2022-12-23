@@ -35,7 +35,7 @@ const replacer = baseReplacer();
  * ```
  */
 const customNameReplacer = (...modifiedNames: string[]) => {
-  baseReplacer(
+  return baseReplacer(
     generateEasyTailwindRegex(
       ...(modifiedNames.length === 0 ? ['e', 'etw'] : modifiedNames),
     ),
