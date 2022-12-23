@@ -44,8 +44,8 @@ const replaceTernary =
 export const baseReplacer = (easyTailwindRegex: RegExp = genericRegex) => {
   return (content: string) => {
     try {
-      const parsedSlices = [...content.matchAll(easyTailwindRegex)]
-        .map((matchArr) => {
+      return [...content.matchAll(easyTailwindRegex)].reduce(
+        (acc: string, matchArr: RegExpMatchArray) => {
           const extractedArgs = extractArgumentsIndex(
             matchArr.index,
             matchArr[0].length,
@@ -58,22 +58,20 @@ export const baseReplacer = (easyTailwindRegex: RegExp = genericRegex) => {
             .trim();
 
           try {
-            const parsedArgs = new Function(`return [${currentTransform}]`)();
-            return e(...parsedArgs);
+            const parsedArgs = e(
+              ...new Function(`return [${currentTransform}]`)(),
+            );
+
+            return acc.replace(extractedArgs, `'${parsedArgs}'`);
           } catch (errorParsing) {
             console.error(
               `\nAre you following EasyTailwind rules?\n\n${errorParsing.message} in\n${extractedArgs}\n\nTrying to be transformed into:\n${currentTransform}\n`,
             );
-            return '';
+            return acc;
           }
-        })
-        .filter(Boolean);
-
-      if (parsedSlices.length === 0) {
-        return content;
-      }
-
-      return content.concat('\n').concat(parsedSlices.join('\n'));
+        },
+        content,
+      );
     } catch (errorOnFile) {
       console.error(
         `\nAre you following EasyTailwind rules?\n\n${errorOnFile.message} in file\n${content}\n`,
