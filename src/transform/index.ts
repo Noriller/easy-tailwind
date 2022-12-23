@@ -35,11 +35,14 @@ const replacer = baseReplacer();
  * ```
  */
 const customNameReplacer = (...modifiedNames: string[]) => {
-  return baseReplacer(
-    generateEasyTailwindRegex(
-      ...(modifiedNames.length === 0 ? ['e', 'etw'] : modifiedNames),
-    ),
-  );
+  // removes empty values
+  const trimmedNames = modifiedNames.filter(Boolean);
+
+  // returns a string array
+  const names =
+    trimmedNames.length === 0 ? ['e', 'etw'] : modifiedNames.map(String);
+
+  return baseReplacer(generateEasyTailwindRegex(...names));
 };
 
 /**
