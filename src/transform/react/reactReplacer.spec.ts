@@ -44,9 +44,7 @@ describe('react| .replacer()', () => {
                 </div>
               );
             }
-          
-      using with e
-      using with etw"
+          "
     `);
   });
 
@@ -72,21 +70,14 @@ describe('react| .replacer()', () => {
             export function MyComponentWithMatches() {
               return (
                 <div className=\\"not using here\\">
-                  <div className={e(
-                      \`using
+                  <div className={e('using
                        with
                        line
-                       breaks\`,
-                       'other classes'
-                    )}>anything1</div>
+                       breaks other classes')}>anything1</div>
                 </div>
               );
             }
-          
-      using
-                       with
-                       line
-                       breaks other classes"
+          "
     `);
   });
 
@@ -123,26 +114,12 @@ describe('react| .replacer()', () => {
               return (
                 <div className=\\"not using here\\">
                   <div className={
-                    e(
-                      'using with e',
-                      \\"in a complex manner\\",
-                      {
-                        mod1: [\\"value\\", \\"other\\"],
-                        mod2: {
-                          sub1: random && \\"random\\",
-                        },
-                      },
-                      {
-                        another: random ? \\"true\\" : \\"false\\",
-                        another2: !!random || \\"something\\"
-                      }
-                    )
+                    e('using with e in a complex manner mod1:value mod1:other mod2:sub1:random another:true another:false another2:something')
                   }>anything1</div>
                 </div>
               )
             }
-          
-      using with e in a complex manner mod1:value mod1:other mod2:sub1:random another:true another:false another2:something"
+          "
     `);
   });
 
@@ -194,16 +171,50 @@ Math.random() > 0."using with e but with error"
           export function MyComponentWithWeirdThings() {
             return (
               <div
-                className={e(
-                  'bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]',
-                  'bg-[url(https://play.tailwindcss.com/img/grid.svg)]',
-                  'absolute inset-0',
-                )}
+                className={e('bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] bg-[url(https://play.tailwindcss.com/img/grid.svg)] absolute inset-0')}
               ></div>
             )
           }
-        
-      bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] bg-[url(https://play.tailwindcss.com/img/grid.svg)] absolute inset-0"
+        "
+    `);
+  });
+
+  it('handles unbalanced brackets', () => {
+    const fixtureWithImbalance = `
+    export function MyComponentWithWeirdThings() {
+      return (
+        <div
+          className={
+            e(
+              'normal implementation classes',
+              'in multiple lines',
+              [((hard to parse with current regex classes))],
+              unbalanced in string))]],
+              [[((unbalanced in string,
+            )
+          }
+        ></div>
+      )
+    }
+  `;
+    expect(replacer(fixtureWithImbalance)).toMatchInlineSnapshot(`
+      "
+          export function MyComponentWithWeirdThings() {
+            return (
+              <div
+                className={
+                  e(
+                    'normal implementation classes',
+                    'in multiple lines',
+                    [((hard to parse with current regex classes))],
+                    unbalanced in string))]],
+                    [[((unbalanced in string,
+                  )
+                }
+              ></div>
+            )
+          }
+        "
     `);
   });
 
@@ -212,7 +223,7 @@ Math.random() > 0."using with e but with error"
     export function MyComponentWithWeirdThings() {
       return (
         <div
-          className={\`[((hard to parse with current regex classes))] \${
+          className={\`\${otherFunc('something else')} \${
             e(
               'normal implementation classes',
               'in multiple lines'
@@ -227,17 +238,13 @@ Math.random() > 0."using with e but with error"
           export function MyComponentWithWeirdThings() {
             return (
               <div
-                className={\`[((hard to parse with current regex classes))] \${
-                  e(
-                    'normal implementation classes',
-                    'in multiple lines'
-                  )
+                className={\`\${otherFunc('something else')} \${
+                  e('normal implementation classes in multiple lines')
                 }\`}
               ></div>
             )
           }
-        
-      normal implementation classes in multiple lines"
+        "
     `);
   });
 });

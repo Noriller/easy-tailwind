@@ -28,7 +28,7 @@ describe('.baseReplacer()', () => {
     `!boolean ? "my" : "classes"`,
     `!!boolean ? "my" : "classes"`,
   ])('replaces a ternary: %s', (content) => {
-    expect(replacer(`e(${content})`)).toEqual(`e(${content})\nmy classes`);
+    expect(replacer(`e(${content})`)).toEqual(`e('my classes')`);
   });
 
   it.each([
@@ -42,7 +42,7 @@ describe('.baseReplacer()', () => {
     `!!boolean || "my classes"`,
     `!!boolean ?? "my classes"`,
   ])('replaces conditionals: %s', (content) => {
-    expect(replacer(`e(${content})`)).toEqual(`e(${content})\nmy classes`);
+    expect(replacer(`e(${content})`)).toEqual(`e('my classes')`);
   });
 
   it.each([
@@ -60,7 +60,7 @@ describe('.baseReplacer()', () => {
   ])(
     'replaces conditionals with objects: $content | return $result',
     ({ content, result }) => {
-      expect(replacer(`e(${content})`)).toEqual(`e(${content})\n${result}`);
+      expect(replacer(`e(${content})`)).toEqual(`e('${result}')`);
     },
   );
 
