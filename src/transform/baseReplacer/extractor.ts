@@ -1,5 +1,12 @@
 type Quote = '"' | "'" | '`';
 
+/**
+ * Takes arguments from a RegExp match that finds the use of EasyTailwind.
+ * From there it iterates the string until finding the closing bracket and
+ * returns the string.
+ *
+ * In other words, this returns whatever was passed as arguments to `e`
+ */
 export function extractArgumentsIndex(
   matchIndex: number,
   matchLen: number,
